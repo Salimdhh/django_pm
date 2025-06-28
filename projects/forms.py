@@ -7,9 +7,9 @@ class ProjectCreateForm(forms.ModelForm):
         model = Project
         fields = ['category', 'title', 'description']
         widgets = {
-            'category' : forms.Select(),
-            'title' : forms.TextInput(),
-            'description' : forms.Textarea()
+            'category' : forms.Select(attrs=field_attr),
+            'title' : forms.TextInput(attrs=field_attr),
+            'description' : forms.Textarea(attrs=field_attr)
         }
 
 class ProjectUpdateForm(forms.ModelForm):
@@ -17,7 +17,7 @@ class ProjectUpdateForm(forms.ModelForm):
         model = Project
         fields = ['category', 'title', 'status']
         widgets = {
-            'category' : forms.Select(),
-            'title' : forms.TextInput(),
-            'status' : forms.Select()
+            'category' : forms.Select(attrs=field_attr),
+            'title' : forms.TextInput(attrs=field_attr),
+            'status' : forms.Select(attrs=field_attr)
         }
