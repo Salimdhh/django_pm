@@ -1,19 +1,20 @@
-<ul>
-    {% for error in form.none_field_errors %}
-        <li class="list-group-item list-group-item-danger">{{ error|escape }}</li>
-    {% endfor %}
-    {% for field in form %}
-            {% for error in form.none_field_errors %}
-                <li class="list-group-item list-group-item-danger">{{ error|escape }}</li>
-    
-            {% endfor %}
-    {% endfor %}
-
+<ul class="list-unstyled">
+  {# أخطاء النموذج العامة (غير المرتبطة بحقل محدد) #}
+  {% for error in form.non_field_errors %}
+    <li class="text-danger">{{ error|escape }}</li>
+  {% endfor %}
 </ul>
 
 {% for field in form %}
-    <div class="mb-3">
-        <label class="form-label">{{ field.label }}</label>
-        {{ field }}
-    </div>
+  <div class="mb-3">
+    <label class="form-label">{{ field.label }}</label>
+    {{ field }}
+
+    {# عرض الأخطاء الخاصة بالحقل #}
+    {% for error in field.errors %}
+      <div class="form-text text-danger">
+        {{ error }}
+      </div>
+    {% endfor %}
+  </div>
 {% endfor %}

@@ -6,24 +6,53 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url "Project_list" %}">{% trans "Home" %}</a>
         </li>
       </ul>
-      <form method="GET" action="{% url "Project_list" %}" class="d-flex">
-        <div class="input-group">
-          <input 
-            type="text"
-            name="q"
-            class="form-control"
-            placeholder="{% trans "Search" %}"
-            value="{{request.GET.q}}"
+
+      {% if request.user.is_authenticated %}
+        <!-- البحث في اليمين -->
+        <form method="GET" action="{% url "Project_list" %}" class="d-flex ms-auto me-3">
+          <div class="input-group">
+            <input 
+              type="text"
+              name="q"
+              class="form-control"
+              placeholder="{% trans 'Search' %}"
+              value="{{ request.GET.q }}"
             />
-          <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
-        </div>
-      </form>
+            <button class="btn btn-outline-light" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
+
+        <!-- قائمة المستخدم في الجهة المقابلة -->
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ user.username }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="{% url "profile" %}">{% trans "Profile" %}</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form method="post" action="{% url 'logout' %}">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item">{% trans "Logout" %}</button>
+                </form>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      {% else %}
+        <a href="{% url "register" %}" class="btn btn-outline-light ms-auto mx">{% trans "Register" %}</a>
+        <a href="{% url "login" %}" class="btn btn-outline-light ms-auto">{% trans "Login" %}</a>
+      {% endif %}
     </div>
   </div>
 </nav>
