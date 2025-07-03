@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # المفتاح السري و Debug
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key')
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['.onrender.com', '127.0.0.1', 'localhost']
 
@@ -42,7 +42,7 @@ ROOT_URLCONF = 'projects_management.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -58,13 +58,20 @@ TEMPLATES = [
 WSGI_APPLICATION = 'projects_management.wsgi.application'
 
 # قاعدة البيانات - PostgreSQL من Render أو SQLite للمحلي
-DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
+if os.getenv('RENDER'):  # إذا تعمل على سيرفر Render
+    DATABASES = {
+        'default': dj_database_url.config(
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:  # بيئة التطوير المحلية تستخدم SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # كلمات السر
 AUTH_PASSWORD_VALIDATORS = [
